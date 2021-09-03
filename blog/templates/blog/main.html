@@ -1,0 +1,37 @@
+<!--blog폴더에 있는 base.html의 파일을 상속받겠다!-->
+{% extends 'blog/base.html' %} 
+<!--content가 들어갈 자리를 만들어줌. base.html에서도 콘텐츠가 들어갈 자리를 빵꾸뚫어서 틀만 가져다 댄거라 생각하면 됨.
+base.html의 콘텐츠가 들어가는 부분과 같은 부분에 main.html의 콘텐츠가 들어감!
+'block 무엇무엇'으로 시작하고 'endblock'으로 끝을 알려줌-->
+{% block content %}
+<!--쓴 글을 보여주는 창(박스)를 만듦.-->
+<a class="btn btn-primary btn-xl" href="{% url 'create' %}">CREATE</a>
+<section class="page-section" id="services">
+    <div class="container px-4 px-lg-5">
+        <h2 class="text-center mt-0">READ</h2>
+        <!--여기에 해시태그 검색기능 넣겠습니다!!!-->
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            Hashtag 검색
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            {% for hashtag in hashtags.all %}
+              <li><a class="dropdown-item" href="{% url 'search' hashtag.id %}">{{ hashtag.name }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% for posts in posts.all %}
+        <!--제목을 누르면 해당 id값을 가진 게시믈로 이동, 여기서 id는 고유번호!
+        해당 게시물의 제목과, 작성자, 날짜와 시간을 가져올 것임. -->
+        <p>제목 :<a href="{% url 'detail' posts.id %}">{{ posts.title }}</a></p>
+        <p>작성자 : {{ posts.writer }}</p>
+        <p>작성 일자 및 시간 : {{ posts.pub_date }}</p>
+        <!--이곳에 미디어 구현!-->
+        {% if posts.image %}
+          <img src="{{ posts.image.url }}" width="250" height="250" alt="Card image cap">
+        {% endif %}
+        <hr>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
