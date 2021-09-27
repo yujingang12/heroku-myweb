@@ -1,4 +1,5 @@
 # 장고 데이터베이스에서 모델(여기!)로 가져온다. 
+from account.models import CustomUser
 from django.db import models
 # 프로젝트에서 사용하는 user를 import하기 위해 settings를 가져온다!
 from django.conf import settings
@@ -28,9 +29,9 @@ class Blog(models.Model):
 class Comment(models.Model):
     def __str__(self):
         return self.text
-
     post_id = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='comments')
     text = models.CharField(max_length=50)
+    pub_date = models.DateField('date published', null=True)
 
 class Hashtag(models.Model):
     name = models.CharField(max_length=50)

@@ -87,6 +87,7 @@ def detail(request, id):
         if form.is_valid():
             comment  = form.save(commit=False)
             comment.post_id = blog
+            comment.pub_date = timezone.now()
             comment.text = form.cleaned_data['text']
             comment.save()
             form.save_m2m()

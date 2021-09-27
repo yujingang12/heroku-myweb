@@ -31,7 +31,7 @@
         <br>
         <br>
         {% for comment in post.comments.all %}
-            <p>{{comment.text}}</p>
+            <p>{{ comment.pub_date}}: {{comment.text}}</p>
         {% endfor %}
         <form method="POST" action="{% url 'detail' post.id %}">
             {% csrf_token %}
