@@ -131,7 +131,7 @@ def search(request, hashtag_id):
 @require_POST
 def video_like(request):
     pk = request.POST.get('pk', None)
-    video = get_object_or_404(Post, pk=pk)
+    video = get_object_or_404(Blog, pk=pk)
     user = request.user
 
     if video.likes_user.filter(id=user.id).exists():
