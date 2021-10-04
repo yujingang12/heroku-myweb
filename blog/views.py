@@ -1,11 +1,17 @@
-
+import json
+#좋아요 구현
+from django.http.response import HttpResponse
+from .forms import PostForm, CommentForm, HashtagForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+#좋아요...UserInfor....제외 끝
 from django.shortcuts import render, redirect, get_object_or_404
 # models.py에서 Blog모델을 쓸 것이기 때문에 가져온다!
 from .models import Blog, Hashtag
-#forms.py에서 PostForm를 가져온다.
-from .forms import PostForm, CommentForm, HashtagForm #CommentForm 추가함, 해시태그폼도!
 # 장고에서 제공하는 시간기능을 사용하기 위함!
 from django.utils import timezone
+
 
 # Create your views here.
 
@@ -120,3 +126,20 @@ def search(request, hashtag_id):
     hashtag = get_object_or_404(Hashtag, pk=hashtag_id)
     return render(request, 'blog/search.html', {'hashtag':hashtag})
 
+#좋아요 구현
+@login_required
+@require_POST
+def video_like(request):
+    pk = request.POST.get('pk', None)
+    video = get_object_or_404(Post, pk=pk)
+    user = request.user
+
+    if video.likes_user.filter(id=user.id).exists():
+        video.likes_user.remove(user)
+        message = '좋아요 취소'
+    else:
+        video.likes_user.add(user)
+        message = '좋아요'
+
+    context = {'likes_count':video.count_likes_user(), 'message': message}
+    return HttpResponse(json.dumps(context), content_type="application/json")

@@ -27,6 +27,8 @@ urlpatterns = [
     path('blog/hashtag/', blog.views.hashtagform, name='hashtag'),
     #검색기능
     path('blog/<int:hashtag_id>/search/', blog.views.search, name='search'),
+    #좋아요
+    path('like/', blog.views.video_like, name='video_like'),
     #로그인!!!
     path('account/', include('account.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

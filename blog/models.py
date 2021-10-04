@@ -19,6 +19,14 @@ class Blog(models.Model):
     hashtags = models.ManyToManyField('Hashtag', blank=True)
     #이곳에 미디어 하겠슴다!
     image = models.ImageField(upload_to='images/', blank=True)
+    #좋아요 구현
+    likes_user = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        related_name='likes_user'
+    )
+    def count_likes_user(self):
+        return self.likes_user.count()
     
 
 # def로 함수를 선언하고~ 모델 클래스의 객체를 그대로(self) 문자열(str)로 반환한다. 
