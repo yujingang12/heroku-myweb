@@ -1,12 +1,13 @@
 from django import urls
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.urls.conf import include
 # blog안에 view를 임포트 해준다.
 import blog.views
 #이곳에 미디어 하겠습니다!
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls import include
 #이곳에 회원가입!
 from account import views
 
@@ -29,6 +30,10 @@ urlpatterns = [
     path('blog/<int:hashtag_id>/search/', blog.views.search, name='search'),
     #좋아요
     path('like/', blog.views.video_like, name='video_like'),
+    path('blog/bookmark/', include('blog.urls')),
     #로그인!!!
     path('account/', include('account.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+ 
+
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

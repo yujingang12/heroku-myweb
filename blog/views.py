@@ -1,6 +1,8 @@
 import json
+from django.db import models
 #좋아요 구현
 from django.http.response import HttpResponse
+from django.views.generic.detail import DetailView
 from .forms import PostForm, CommentForm, HashtagForm
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -8,9 +10,14 @@ from django.views.decorators.http import require_POST
 #좋아요...UserInfor....제외 끝
 from django.shortcuts import render, redirect, get_object_or_404
 # models.py에서 Blog모델을 쓸 것이기 때문에 가져온다!
-from .models import Blog, Hashtag
+from .models import Blog, Hashtag, Bookmark
 # 장고에서 제공하는 시간기능을 사용하기 위함!
 from django.utils import timezone
+#북마크
+from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.urls import reverse_lazy
+
 
 
 # Create your views here.
@@ -143,3 +150,27 @@ def video_like(request):
 
     context = {'likes_count':video.count_likes_user(), 'message': message}
     return HttpResponse(json.dumps(context), content_type="application/json")
+
+#북마크
+class BookmarkListView(ListView):
+    model = Bookmark
+
+class BookmarkCreateView(CreateView):
+    model = Bookmark
+    fields = ['site_name', 'url']
+    success_url = reverse_lazy('bookmark_list')
+    template_name_suffix = '_create'
+
+class BookmarkDetailView(DetailView):
+    model = Bookmark
+
+#북마크 수정
+class BookmarkUpdateView(UpdateView):
+    model = Bookmark
+    fields = ['site_name', 'url']
+    template_name_suffix = '_update'
+
+#북마크 삭제
+class BookmarkDeleteView(DeleteView):
+    model = Bookmark
+    success_url = reverse_lazy('bookmark_list')
